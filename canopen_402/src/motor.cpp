@@ -266,10 +266,15 @@ uint16_t Motor402::getMode() {
 }
 
 bool Motor402::isModeSupportedByDevice(uint16_t mode){
-    if(!supported_drive_modes_.valid()) {
-        BOOST_THROW_EXCEPTION( std::runtime_error("Supported drive modes (object 6502) is not valid"));
-    }
-    return mode > 0 && mode <= 32 && (supported_drive_modes_.get_cached() & (1<<(mode-1)));
+    /* Had to be modofied for ZLTECH driver (ZLA8030L) as OD 6502 is not available */
+    
+    // if(!supported_drive_modes_.valid()) {
+    //     BOOST_THROW_EXCEPTION( std::runtime_error("Supported drive modes (object 6502) is not valid"));
+    // }
+    // return mode > 0 && mode <= 32 && (supported_drive_modes_.get_cached() & (1<<(mode-1)));
+
+    // Modification
+    if (mode==0 || mode==1 || mode==3 || mode==4) return true; else return false;
 }
 void Motor402::registerMode(uint16_t id, const ModeSharedPtr &m){
     boost::mutex::scoped_lock map_lock(map_mutex_);
